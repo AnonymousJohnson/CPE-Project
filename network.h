@@ -1,4 +1,4 @@
-//Contains adjacency matrix representing network, a probability matrix quantifying each link's chance of failiure, and a probability array quantifying each node's chance of failiure
+  //Contains adjacency matrix representing network, a probability matrix quantifying each link's chance of failiure, and a probability array quantifying each node's chance of failiure
 #ifndef NETWORK_H
 #define NETOWRK_H
 
@@ -23,7 +23,7 @@ class network
     void shuffle_list(vector<int> list);
     void print();
     vector<vector<bool>> get_network_graph();
-    vector<int> delete_links_and_nodes();
+    vector<vector<int>> delete_links_and_nodes();
     void resize_network(vector<int> deleted_nodes);
     bool is_network_connected();
     void traverse(int v, vector<bool>& visited);
