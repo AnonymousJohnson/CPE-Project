@@ -5,9 +5,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <pthread.h>
 #include <vector>
 #include <algorithm>
+#include <cmath>
+
 using namespace std;
 
 class network

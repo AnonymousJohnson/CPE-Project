@@ -92,7 +92,6 @@ void network::initialize_network(int s)
       }
     }
   }
-
   print();
 }
 void network::shuffle_list(vector<int> list)
@@ -144,49 +143,50 @@ vector<vector<bool>> network::get_network_graph()
 vector<vector<int>> network::delete_links_and_nodes()
 {
   vector<int> deleted_nodes;
-  vector<vector<int>> link_lost_nodes;
+  vector<int> link_lost_nodes;
+  vector<vector<int>> affected_nodes;
   for (int i = 0; i < size; i++)
   {
     float random = static_cast<float> (rand() % RAND_MAX)/static_cast <float> (RAND_MAX);
     //Router defects if random value between 0 and 1 is less than the probability of that event occuring
+    
     if (random < node_failiure_array[i])
     {
-      cout << i << " deleted.\n\n";
+      cout << "Deleted node: " << i << endl;
       deleted_nodes.push_back(i);
     }
     else
     {
-      for (int j = 0; j < size; j++)
+      vector<int> v;
+      for (int j = i + 1; j < size; j++)
       {
         float random = static_cast <float> (rand() % RAND_MAX)/static_cast <float> (RAND_MAX);
-        vector<int> v;
         //Link defects if random value between 0 and 1 is less than the probability of that event occuring
-        if (random < link_failiure_matrix[i][j] && network_graph[i][j] != 0 && i != j)
+
+        if (random < link_failiure_matrix[i][j] && network_graph[i][j] != 0)
         {
-          if (v.empty())
-          {
-            v.push_back(i);
-            v.push_back(j);
-          }
-          else if (!count(v.begin(), v.end(), j))
-          {
-            link_lost_nodes.push_back(j);
-          }
+          cout << '(' << i << ',' << j << ')' << ' ';
+          int cantor_mapping = ((i*i)+(2*i*j)+(j*j)+(3*i)+j);
+          v.push_back(cantor_mapping);
           network_graph[i][j] = 0;
           network_graph[j][i] = 0;
           link_failiure_matrix[i][j] = 0;
           link_failiure_matrix[j][i] = 0;
         }
       }
+      if (!v.empty())
+      {
+        affected_nodes.push_back(v);
+      }
     }
   }
+  cout << endl << endl;
+  print();
   resize_network(deleted_nodes);
   //Deleting nodes without deleting the rows and columns representing those nodes will inadvertently cause
   //is_network_connected() to return false
 
-  vector<vector<int>> affected_nodes;
-  affected_nodes.push_back(deleted_nodes);
-  affected_nodes.push_back(link_lost_nodes);
+  affected_nodes.insert(affected_nodes.begin(), deleted_nodes);
   return affected_nodes;
 }
 void network::resize_network(vector<int> deleted_nodes)
@@ -222,7 +222,6 @@ void network::resize_network(vector<int> deleted_nodes)
   {
     size -= deleted_nodes.size();
   }
-  print();
 }
 
 bool network::is_network_connected()
